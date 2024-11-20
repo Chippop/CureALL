@@ -1,0 +1,62 @@
+_target_: cureall.models.cureall_module.CureALLModule
+
+optimizer:
+  _target_: torch.optim.Adam
+  _partial_: true
+  lr: 0.001
+  weight_decay: 0.0
+
+scheduler:
+  _target_: torch.optim.lr_scheduler.ConstantLR
+  _partial_: true
+  factor: 0.1
+  # patience: 10
+  # mode: min
+
+loss_config:
+  alpha_mse: 1.0
+  alpha_mse_control: 1.0
+  alpha_topk: 1.0
+
+metric_config:
+  cal_every_n_batch: 20
+
+net_config:
+  model_type: all
+  unimol_pretrained_weights: ${paths.root_dir}/model_weights/mol_pre_no_h_220816.pt
+  target_dim: 978
+  unimol:
+    encoder_layers: 15
+    encoder_embed_dim: 512
+    encoder_ffn_embed_dim: 2048
+    encoder_attention_heads: 64
+    dropout: 0.1
+    emb_dropout: 0.1
+    attention_dropout: 0.1
+    activation_dropout: 0.0
+    pooler_dropout: 0.0
+    max_seq_len: 512
+    activation_fn: gelu
+    pooler_activation_fn: tanh
+    post_ln: false
+    masked_token_loss: -1.0
+    masked_coord_loss: -1.0
+    masked_dist_loss: -1.0
+    x_norm_loss: -1.0
+    delta_pair_repr_norm_loss: -1.0
+    mode: infer
+  uce:
+    token_dim: 5120
+    embed_size: 1280
+    ffn_size: 5120
+    n_layers: 33
+    n_heads: 20
+    dropout: 0.00
+    output_dim: 1280
+    pretrained_model_name_or_path: ${paths.root_dir}/model_weights/uce_33_layers.pt
+
+# compile model for faster training with pytorch 2.0
+compile: false
+
+# net
+net: null

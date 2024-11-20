@@ -1,0 +1,21 @@
+# @package _global_
+
+defaults:
+  - _self_
+  - data: default # choose datamodule with `test_dataloader()` for evaluation
+  - model: default
+  - logger: null
+  - trainer: gpu
+  - paths: default
+  - extras: default
+  - hydra: default
+
+task_name: "eval"
+exp_name: "default"
+
+tags: ["dev"]
+
+# passing checkpoint path is necessary for evaluation
+ckpt_path: null
+save_name: "sciplex_all.pkl"
+save_path: ${paths.result_dir}/${save_name}

@@ -1,0 +1,16 @@
+_target_: cureall.data.cureall_datamodule.CureALLDataModule
+
+data_name: lincs
+data_dir: ${paths.data_dir}/${data.data_name}/
+seed: 42
+train_split: train
+val_split: val
+test_split: test
+conf_size: 10
+remove_hydrogen: true
+remove_polar_hydrogen: true
+max_atoms: 512
+max_seq_len: 512
+batch_size: 2
+num_workers: 8
+pin_memory: True

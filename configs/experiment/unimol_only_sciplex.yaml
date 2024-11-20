@@ -1,0 +1,40 @@
+# @package _global_
+
+# to execute this experiment run:
+# python train.py experiment=example
+
+defaults:
+  - override /data: unimol_only_sciplex
+  - override /model: unimol_only_sciplex
+  - override /callbacks: default
+  - override /trainer: gpu
+
+# all parameters below will be merged with parameters from default configurations set above
+# this allows you to overwrite only specified parameters
+
+tags: ["unimol", "unimol_only"]
+
+seed: 42
+
+trainer:
+  min_epochs: 10
+  max_epochs: 100
+  log_every_n_steps: 10
+  gradient_clip_val: 0.5
+  devices: 1
+  check_val_every_n_epoch: 1
+
+model:
+  optimizer:
+    lr: 1e-4
+    weight_decay: 1e-2
+  compile: false
+
+data:
+  batch_size: 16
+
+logger:
+  wandb:
+    tags: ${tags}
+    group: "unimol_only"
+    project: "cureall"
