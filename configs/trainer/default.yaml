@@ -6,7 +6,7 @@ min_epochs: 1 # prevents early stopping
 max_epochs: 100
 
 accelerator: gpu
-devices: auto
+devices: 8
 
 # mixed precision for extra speed-up
 precision: 16
