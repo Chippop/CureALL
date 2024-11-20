@@ -121,19 +121,19 @@ class SincleCellDataset(data.Dataset):
         # Set expression
         self.expression = expression
 
-        row_sums = self.expression.sum(1)  # UMI Counts
-        log_norm_count_adj = torch.log1p(self.expression / (self.expression.sum(1)).unsqueeze(1) * torch.tensor(1000))
+        # row_sums = self.expression.sum(1)  # UMI Counts
+        # log_norm_count_adj = torch.log1p(self.expression / (self.expression.sum(1)).unsqueeze(1) * torch.tensor(1000))
 
-        # Set log norm and count adjusted expression
-        max_vals, max_idx = torch.max(log_norm_count_adj, dim=0)
-        self.expression_mod = log_norm_count_adj / max_vals
+        # # Set log norm and count adjusted expression
+        # max_vals, max_idx = torch.max(log_norm_count_adj, dim=0)
+        # self.expression_mod = log_norm_count_adj / max_vals
 
-        # Calculate dropout likliehoods of each gene
-        self.dropout_vec = (self.expression == 0).float().mean(0)  # per gene dropout percentages
+        # # Calculate dropout likliehoods of each gene
+        # self.dropout_vec = (self.expression == 0).float().mean(0)  # per gene dropout percentages
 
-        # Set data info
-        self.num_cells = self.expression.shape[0]
-        self.num_genes = self.expression.shape[1]
+        # # Set data info
+        # self.num_cells = self.expression.shape[0]
+        # self.num_genes = self.expression.shape[1]
 
         # Set optional label info, including categorical covariate index
         self.covar_vals = covar_vals

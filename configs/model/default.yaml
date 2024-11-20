@@ -22,7 +22,7 @@ metric_config:
   cal_every_n_batch: 20
 
 net_config:
-  model_type: all
+  model_type: uce
   unimol_pretrained_weights: ${paths.root_dir}/model_weights/mol_pre_no_h_220816.pt
   target_dim: 978
   unimol:
