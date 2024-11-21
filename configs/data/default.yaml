@@ -1,7 +1,8 @@
 _target_: cureall.data.cureall_datamodule.CureALLDataModule
 
-data_name: lincs_sz
-data_dir: ${paths.data_dir}/${data.data_name}/
+# data_name: lincs_sz
+# data_dir: ${paths.data_dir}/${data.data_name}/
+data_dir: /mnt/data/A100/data/yftc/CureALL_data/
 seed: 42
 train_split: train
 val_split: val
@@ -11,6 +12,6 @@ remove_hydrogen: true
 remove_polar_hydrogen: true
 max_atoms: 512
 max_seq_len: 512
-batch_size: 2
+batch_size: 8
 num_workers: 8
 pin_memory: True

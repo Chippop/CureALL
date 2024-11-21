@@ -7,7 +7,9 @@ root_dir: ${oc.env:PROJECT_ROOT}
 data_dir: ${paths.root_dir}/datas/
 
 # path to logging directory
-log_dir: ${paths.root_dir}/logs/
+# log_dir: ${paths.root_dir}/logs/
+
+log_dir: /mnt/data/A100/data/yftc/CureALL_data/checkpoint
 
 # inference result
 result_dir: ${paths.root_dir}/results/
