@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+# name = "cureall"
+name = CureALL
+description = "Network for drug discovery"
+readme = "README.md"
+license = {file = "LICENSE"}
+keywords = ["Machine Learning", "Transformers", "Omics"]
+maintainers = [
+    {name = "Xi Wang", email = "wangx@dp.tech"},
+]
+authors = [
+    {name = "Xi Wang", email = "wangx@dp.tech"},
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+requires-python = ">=3"
+dynamic = ["version"]
+dependencies = [
+    "transformers",
+    "pyarrow",
+    "wandb",
+    "pandas",
+    "biopython",
+]
+
+[project.urls]
+# repository = "https://github.com/ZexiChen502/CureALL"
+repository = "https://github.com/Chippop/CureALL.git"
+
+[tool.setuptools]
+packages = ["cureall"]
+
+[tool.setuptools_scm]
+write_to = "_version.py"
+
+[tool.black]
+line-length = 120
+
+[tool.isort]
+line_length = 120
+profile = "black"
