@@ -12,6 +12,6 @@ remove_hydrogen: true
 remove_polar_hydrogen: true
 max_atoms: 512
 max_seq_len: 512
-batch_size: 8
+batch_size: 4
 num_workers: 8
 pin_memory: True
