@@ -115,6 +115,7 @@ class CureALLModule(LightningModule):
 
         # val max
         self.val_best = MaxMetric()
+        
 
 #     #### default
 #     def forward(self, x: torch.Tensor) -> torch.Tensor:
@@ -155,13 +156,14 @@ class CureALLModule(LightningModule):
         )
         
         cell_repr = self.cell_model(x["uce_batches"][0], x["uce_batches"][1])
-        # preds = torch.cat([self.uce_linear(cell_repr), self.smiles_linear(repr[:, 0, :])], dim=-1)
+        preds = torch.cat([self.uce_linear(cell_repr), self.smiles_linear(repr[:, 0, :])], dim=-1)
         # get <cls> token representation
         # return self.head(torch.cat((repr[:, 0, :], cell_repr), dim=1))
         # smiles_repr = self.smiles_linear(repr[:, 0, :])
         # cell_repr = self.uce_linear(cell_repr)
-        preds = self.head(cell_repr, repr[:, 0, :])
-        return preds
+        # preds = self.head(cell_repr, repr[:, 0, :])
+        
+        return preds, cell_repr, repr[:, 0, :]
 
     
     def on_train_start(self) -> None:
@@ -182,19 +184,24 @@ class CureALLModule(LightningModule):
             - A tensor of target labels.
         """
         item = batch
-        preds = self.forward(item["net_input"])
+        preds, cell_embed, smiles_embed = self.forward(item["net_input"])
         target = item["label"]["target"]
         control = item["label"]["control"]
 
-        regression_loss = self.criterion(preds, target)
-        control_loss = 1 - F.cosine_similarity(preds, control).mean()
-        margin = 1.0
-        positive_pairs = F.pairwise_distance(preds, target)
-        negative_pairs = F.pairwise_distance(preds, control)
-        contrastive_loss = F.relu(margin + positive_pairs - negative_pairs).mean()
-        alpha, beta, gamma = 1.0, 0.1, 0.1
-        loss = alpha * regression_loss + beta * control_loss + gamma * contrastive_loss
+        # regression_loss = self.criterion(preds, target)
+        # control_loss = 1 - F.cosine_similarity(preds, control).mean()
+        # margin = 1.0
+        # positive_pairs = F.pairwise_distance(preds, target)
+        # negative_pairs = F.pairwise_distance(preds, control)
+        # contrastive_loss = F.relu(margin + positive_pairs - negative_pairs).mean()
+        # alpha, beta, gamma = 1.0, 0.1, 0.1
+        # loss = alpha * regression_loss + beta * control_loss + gamma * contrastive_loss
 
+        cont = target - control
+
+        preds_normalized = (preds - preds.mean(dim=0)) / preds.std(dim=0)  # Normalize preds
+        cont_normalized = (cont - cont.mean(dim=0)) / cont.std(dim=0)  # Normalize contrastive targets
+        loss = self.criterion(preds_normalized, cont_normalized)
 
         # loss = (
         #     self.criterion(preds, target) * self.loss_config.alpha_mse
