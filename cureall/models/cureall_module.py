@@ -196,19 +196,23 @@ class CureALLModule(LightningModule):
         # contrastive_loss = F.relu(margin + positive_pairs - negative_pairs).mean()
         # alpha, beta, gamma = 1.0, 0.1, 0.1
         # loss = alpha * regression_loss + beta * control_loss + gamma * contrastive_loss
-
         cont = target - control
-
-        preds_normalized = (preds - preds.mean(dim=0)) / preds.std(dim=0)  # Normalize preds
-        cont_normalized = (cont - cont.mean(dim=0)) / cont.std(dim=0)  # Normalize contrastive targets
-        loss = self.criterion(preds_normalized, cont_normalized)
+        # eps = 1e-8
+        # pstd = preds.std(dim=0)
+        # cstd = cont.std(dim=0)
+        # pstd = torch.where(pstd == 0, torch.tensor(eps, device=pstd.device), pstd)
+        # cstd = torch.where(cstd == 0, torch.tensor(eps, device=cstd.device), cstd)
+        # preds_normalized = (preds - preds.mean(dim=0)) / pstd # Normalize preds
+        # cont_normalized = (cont - cont.mean(dim=0)) / cstd # Normalize contrastive targets
+        loss = self.criterion(preds, cont)
 
         # loss = (
         #     self.criterion(preds, target) * self.loss_config.alpha_mse
         #     + self.criterion(preds - control, target - control) * self.loss_config.alpha_mse_control
         #     + binary_top_k_loss(preds - control, target - control) * self.loss_config.alpha_topk
         # ) / 3
-        return loss, preds, item["label"]
+        # return loss, preds, item["label"]
+        return loss, preds, cont
 
     def training_step(self, batch: Tuple[torch.Tensor, torch.Tensor], batch_idx: int) -> torch.Tensor:
         """Perform a single training step on a batch of data from the training set.
@@ -224,7 +228,8 @@ class CureALLModule(LightningModule):
         self.train_loss(loss)
 
         if batch_idx % self.hparams.metric_config.cal_every_n_batch == 0:
-            self.train_metric(preds, label["target"])
+            # self.train_metric(preds, label["target"])
+            self.train_metric(preds, label)
 
         self.log("train/loss", self.train_loss, on_step=True, prog_bar=True)
         # TODO: check if this is correct
@@ -250,7 +255,8 @@ class CureALLModule(LightningModule):
 
         # update and log metrics
         self.val_loss(loss)
-        self.val_metric(preds, targets["target"])
+        # self.val_metric(preds, targets["target"])
+        self.val_metric(preds, targets)
 
     def on_validation_epoch_end(self) -> None:
         "Lightning hook that is called when a validation epoch ends."
