@@ -6,13 +6,13 @@ min_epochs: 1 # prevents early stopping
 max_epochs: 100
 
 accelerator: gpu
-devices: 8
+devices: 6
 
 # mixed precision for extra speed-up
 precision: 16
 
 # perform a validation loop every N training epochs
-check_val_every_n_epoch: 2
+check_val_every_n_epoch: 5
 
 # set True to to ensure deterministic results
 # makes training slower but gives more reproducibility than just setting seeds
