@@ -69,7 +69,8 @@ class UCEModel(PreTrainedModel):
         empty_pe = torch.zeros(145469, 5120)
         empty_pe.requires_grad = False
         self.model.pe_embedding = nn.Embedding.from_pretrained(empty_pe)
-        self.model.load_state_dict(torch.load(self.configs.pretrained_model_name_or_path))
+        checkpoint = torch.load(self.configs.pretrained_model_name_or_path, map_location="cpu")
+        self.model.load_state_dict(checkpoint)
 
     def forward(self, batch_seq: torch.Tensor, mask: torch.Tensor, **kwargs):
         batch_seq = batch_seq.permute(1, 0)

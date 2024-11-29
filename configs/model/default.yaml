@@ -3,7 +3,7 @@ _target_: cureall.models.cureall_module.CureALLModule
 optimizer:
   _target_: torch.optim.Adam
   _partial_: true
-  lr: 0.001
+  lr: 0.0001
   weight_decay: 0.0
 
 scheduler:
@@ -22,7 +22,7 @@ metric_config:
   cal_every_n_batch: 20
 
 net_config:
-  model_type: all
+  model_type: uce
   # unimol_pretrained_weights: ${paths.root_dir}/model_weights/mol_pre_no_h_220816.pt
   unimol_pretrained_weights: /mnt/data/A100/data/yftc/CureALL/model_weights/mol_pre_no_h_220816.pt
   target_dim: 978

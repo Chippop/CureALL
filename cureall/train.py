@@ -1,3 +1,4 @@
+import os
 from typing import Any, Dict, List, Optional, Tuple
 
 import hydra
@@ -5,6 +6,7 @@ import lightning as L
 import rootutils
 import torch
 from lightning import Callback, LightningDataModule, LightningModule, Trainer
+from pytorch_lightning.strategies import DDPStrategy
 from lightning.pytorch.loggers import Logger
 from omegaconf import DictConfig
 from cureall.utils import (
@@ -50,7 +52,18 @@ def train(cfg: DictConfig) -> Tuple[Dict[str, Any], Dict[str, Any]]:
 
     log.info(f"Instantiating trainer <{cfg.trainer._target_}>")
     trainer: Trainer = hydra.utils.instantiate(cfg.trainer, callbacks=callbacks, logger=logger, accelerator='gpu')
-
+    # trainer: Trainer = hydra.utils.instantiate(cfg.trainer, callbacks=callbacks, logger=logger)
+    # trainer = Trainer(
+    #     default_root_dir="/mnt/data/yftc/CureALL/logs/train/runs/default",
+    #     max_epochs=100,
+    #     min_epochs=1,
+    #     accelerator="gpu",
+    #     devices=[0,1,2,3],
+    #     precision=16,
+    #     # strategy="auto",
+    #     # strategy=DDPStrategy(find_unused_parameters=True)
+    #     strategy='ddp_find_unused_parameters_true'
+    # )
     object_dict = {
         "cfg": cfg,
         "datamodule": datamodule,
