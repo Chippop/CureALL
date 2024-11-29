@@ -219,7 +219,7 @@ class CureALLModule(LightningModule):
         #     + binary_top_k_loss(preds - control, target - control) * self.loss_config.alpha_topk
         # ) / 3
         # return loss, preds, item["label"]
-        return loss, preds, cont
+        return loss, preds, target
 
     def training_step(self, batch: Tuple[torch.Tensor, torch.Tensor], batch_idx: int) -> torch.Tensor:
         """Perform a single training step on a batch of data from the training set.
