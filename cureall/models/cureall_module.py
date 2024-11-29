@@ -188,15 +188,22 @@ class CureALLModule(LightningModule):
         target = item["label"]["target"]
         control = item["label"]["control"]
 
-        # regression_loss = self.criterion(preds, target)
-        # control_loss = 1 - F.cosine_similarity(preds, control).mean()
-        # margin = 1.0
-        # positive_pairs = F.pairwise_distance(preds, target)
-        # negative_pairs = F.pairwise_distance(preds, control)
-        # contrastive_loss = F.relu(margin + positive_pairs - negative_pairs).mean()
-        # alpha, beta, gamma = 1.0, 0.1, 0.1
-        # loss = alpha * regression_loss + beta * control_loss + gamma * contrastive_loss
-        cont = target - control
+        def safe_normalize(x, eps=1e-9):
+            return F.normalize(x, p=2, dim=1, eps=eps)
+
+        preds = safe_normalize(preds)
+        target = safe_normalize(target)
+        control = safe_normalize(control)
+        
+        regression_loss = self.criterion(preds, target)
+        control_loss = 1 - F.cosine_similarity(preds, control).mean()
+        margin = 0.5
+        positive_pairs = F.pairwise_distance(preds, target)
+        negative_pairs = F.pairwise_distance(preds, control)
+        contrastive_loss = F.relu(margin + positive_pairs - negative_pairs).mean()
+        alpha, beta, gamma = 1.0, 0.1, 0.1
+        loss = alpha * regression_loss + beta * control_loss + gamma * contrastive_loss
+        # cont = target - control
         # eps = 1e-8
         # pstd = preds.std(dim=0)
         # cstd = cont.std(dim=0)
@@ -204,7 +211,7 @@ class CureALLModule(LightningModule):
         # cstd = torch.where(cstd == 0, torch.tensor(eps, device=cstd.device), cstd)
         # preds_normalized = (preds - preds.mean(dim=0)) / pstd # Normalize preds
         # cont_normalized = (cont - cont.mean(dim=0)) / cstd # Normalize contrastive targets
-        loss = self.criterion(preds, cont)
+        # loss = self.criterion(preds, cont)
 
         # loss = (
         #     self.criterion(preds, target) * self.loss_config.alpha_mse
