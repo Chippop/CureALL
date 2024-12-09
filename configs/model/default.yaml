@@ -3,8 +3,8 @@ _target_: cureall.models.cureall_module.CureALLModule
 optimizer:
   _target_: torch.optim.Adam
   _partial_: true
-  lr: 0.0001
-  weight_decay: 0.0
+  lr: 0.0005
+  weight_decay: 0.01
 
 scheduler:
   _target_: torch.optim.lr_scheduler.ConstantLR
@@ -22,16 +22,16 @@ metric_config:
   cal_every_n_batch: 20
 
 net_config:
-  model_type: uce
-  # unimol_pretrained_weights: ${paths.root_dir}/model_weights/mol_pre_no_h_220816.pt
-  unimol_pretrained_weights: /mnt/data/A100/data/yftc/CureALL/model_weights/mol_pre_no_h_220816.pt
+  model_type: all
+  unimol_pretrained_weights: ${paths.root_dir}/model_weights/mol_pre_no_h_220816.pt
+  # unimol_pretrained_weights: /mnt/data/A100/data/yftc/CureALL/model_weights/mol_pre_no_h_220816.pt
   target_dim: 978
   unimol:
     encoder_layers: 15
     encoder_embed_dim: 512
     encoder_ffn_embed_dim: 2048
     encoder_attention_heads: 64
-    dropout: 0.1
+    dropout: 0.2
     emb_dropout: 0.1
     attention_dropout: 0.1
     activation_dropout: 0.0
@@ -52,10 +52,10 @@ net_config:
     ffn_size: 5120
     n_layers: 33
     n_heads: 20
-    dropout: 0.00
+    dropout: 0.1
     output_dim: 1280
-    # pretrained_model_name_or_path: ${paths.root_dir}/model_weights/uce_33_layers.pt
-    pretrained_model_name_or_path: /mnt/data/A100/data/yftc/CureALL/model_weights/uce_33_layers.pt
+    pretrained_model_name_or_path: ${paths.root_dir}/model_weights/uce_33_layers.pt
+    # pretrained_model_name_or_path: /mnt/data/A100/data/yftc/CureALL/model_weights/uce_33_layers.pt
 
 # compile model for faster training with pytorch 2.0
 compile: false
